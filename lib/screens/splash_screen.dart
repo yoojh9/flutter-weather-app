@@ -35,7 +35,15 @@ class _SplashScreenState extends State<SplashScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/043-warm.png', height: ScreenUtil().setHeight(150)),
+            Image.asset('assets/images/048-umbrella.png', height: ScreenUtil().setHeight(150)),
+            SizedBox(height: ScreenUtil().setHeight(10)),
+            Text('오늘날씨', style: TextStyle(
+                fontSize: ScreenUtil().setSp(28),
+                fontWeight: FontWeight.w900,
+                color: Colors.black87
+              ),
+              textAlign: TextAlign.center,
+            )
           ]
         ),
       )

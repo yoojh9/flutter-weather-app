@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import './screens/version_screen.dart';
 import './screens/weather_screen.dart';
 import './screens/splash_screen.dart';
 import './providers/weather.dart';
@@ -102,6 +103,7 @@ class MyApp extends StatelessWidget {
           home: SplashScreen(),
           routes: {
             WeatherScreen.routeName: (ctx) => WeatherScreen(),
+            VersionScreen.routeName: (ctx) => VersionScreen(),
           }
       )
     );

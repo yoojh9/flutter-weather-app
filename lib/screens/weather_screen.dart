@@ -3,15 +3,17 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screen_util.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/providers/location_info.dart';
-import 'package:weather_app/theme/color.dart';
+import '../providers/location_info.dart';
+import '../providers/weather.dart';
+import '../theme/color.dart';
 import '../widgets/daily_weather_list.dart';
 import '../widgets/hourly_weather_list.dart';
 import '../widgets/current_weather_widget.dart';
 import '../widgets/drawer_menu.dart';
-import '../providers/weather.dart';
-import '../providers/location_info.dart';
+
+
 
 class WeatherScreen extends StatefulWidget {
   
@@ -23,6 +25,8 @@ class WeatherScreen extends StatefulWidget {
 
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  
+  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
 
   @override
   void didChangeDependencies() async {
@@ -35,9 +39,16 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   }
 
-  void refresh() async{
+  void _refresh() async{
     LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
     await Provider.of<Weather>(context, listen: false).getWeather(locationInfo.latitude, locationInfo.longitude);
+  }
+
+  void _toggle() {
+    print('toggle');
+    _innerDrawerKey.currentState.toggle(
+      direction: InnerDrawerDirection.start
+    );
   }
 
   @override
@@ -45,19 +56,28 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final weather = Provider.of<Weather>(context, listen: true);
     final location = Provider.of<LocationInfo>(context, listen: true);
 
-    print('currentWeather :: ${weather.currentWeather.icon}');
-    return Platform.isIOS 
-      ? CupertinoPageScaffold(
-        
-        child: _pageBody(context, location, weather)
-      )
-      : Scaffold(
-        drawer: DrawerMenu(),
-        body: _pageBody(context, location, weather),
-      );
+    return InnerDrawer(
+      key: _innerDrawerKey,
+      onTapClose: true,
+      swipe: true,
+      //scale: IDOffset.horizontal(0.9),
+      //borderRadius: 30,
+      leftAnimationType: InnerDrawerAnimation.linear,
+      backgroundDecoration: BoxDecoration(color: Colors.white),
+      offset: IDOffset.only(bottom: 0.0, right: 0.0, left: 0.6),
+      leftChild: DrawerMenu(),
+    
+      scaffold: Platform.isIOS 
+        ? CupertinoPageScaffold(
+          child: _weatherBody(context, location, weather)
+        )
+        : Scaffold(
+          body: _weatherBody(context, location, weather),
+        )
+    );
   }
 
-  Widget _pageBody(BuildContext ctx, final location, final weather){
+  Widget _weatherBody(BuildContext ctx, final location, final weather){
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: ScreenUtil().setWidth(12)
@@ -70,9 +90,9 @@ class _WeatherScreenState extends State<WeatherScreen> {
             pinned: true,
             //floating: true,
             elevation: 0,
-            leading: IconButton(icon: Icon(Icons.menu), onPressed: (){},),
+            leading: IconButton(icon: Icon(Icons.menu), onPressed: _toggle,),
             actions: [
-              IconButton(icon: Icon(Icons.refresh), onPressed: refresh,)
+              IconButton(icon: Icon(Icons.refresh), onPressed: _refresh,)
             ],
             //expandedHeight: ScreenUtil().setHeight(100),
             flexibleSpace: Container(
