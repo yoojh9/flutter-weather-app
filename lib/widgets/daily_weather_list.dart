@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screen_util.dart';
-import '../providers/daily_weather.dart';
+import '../models/daily_weather.dart';
 
 class DailyWeatherList extends StatelessWidget {
   List<DailyWeather> dailyWeatherList;

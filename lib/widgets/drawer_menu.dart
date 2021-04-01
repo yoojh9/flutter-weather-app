@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../screens/version_screen.dart';
+import '../models/license.dart';
 
 class DrawerMenu extends StatelessWidget {
   @override
@@ -40,7 +41,32 @@ class DrawerMenu extends StatelessWidget {
           ),
           ListTile(
             title: Text('오픈소스라이센스'),
-            onTap: (){},
+            onTap: (){
+              License.showLicensePage(context: context);
+              //showLicensePage(context: context, useRootNavigator: false);
+              // Navigator.of(context).push(MaterialPageRoute(
+              //   builder: (ctx) => Theme(
+              //     data: Theme.of(context).copyWith(
+              //       appBarTheme: AppBarTheme(
+              //         backgroundColor: Colors.white,
+              //         elevation: 0,
+              //         textTheme: ThemeData.light().textTheme.copyWith(
+              //           headline6: TextStyle(
+              //             fontSize: ScreenUtil().setSp(14),
+              //             color: Colors.black,
+              //           )
+              //         ),
+              //         actionsIconTheme: IconThemeData(
+              //           size: ScreenUtil().setWidth(10),
+              //           color: Colors.black
+              //         )
+              //       ),
+              //       scaffoldBackgroundColor: Colors.white,
+              //     ),
+              //     child: LicensePage()
+              //   ),)
+              // );
+            },
           )
         ],
       )

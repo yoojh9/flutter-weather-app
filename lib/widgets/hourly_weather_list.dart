@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screen_util.dart';
-import '../providers/hourly_weather.dart';
+import '../models/hourly_weather.dart';
 import './item/hourly_weather_item.dart';
 
 class HourlyWeatherList extends StatelessWidget {

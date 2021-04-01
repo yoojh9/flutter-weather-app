@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/providers/daily_weather.dart';
-import '../providers/current_weather.dart';
-import '../providers/hourly_weather.dart';
+import 'package:weather_app/models/daily_weather.dart';
+import '../models/current_weather.dart';
+import '../models/hourly_weather.dart';
 import '../network/weather_api.dart' as WeatherAPI;
 
 class Weather with ChangeNotifier{
