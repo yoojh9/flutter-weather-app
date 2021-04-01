@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "675828623869",
+    "project_id": "jeonghyun-today-weather",
+    "storage_bucket": "jeonghyun-today-weather.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:675828623869:android:e33b0b8a21abab5f609194",
+        "android_client_info": {
+          "package_name": "kr.jeonghyun.weather_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "675828623869-5rv7uj2oelbefu80dtdgcre9k6ig9o0o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4iL0xv9hdhmIhQFbK3tOI-bRSBMoLIj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "675828623869-5rv7uj2oelbefu80dtdgcre9k6ig9o0o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "675828623869-qpn3k0bokhrr6e5tjvsrrs02o9984ncn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kr.jeonghyun.weatherApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

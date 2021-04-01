@@ -38,6 +38,7 @@
 **/android/gradlew.bat
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.*
+**/android/app/google-services.json
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -78,3 +79,6 @@ svc-keyfile.json
 !**/ios/**/default.pbxuser
 !**/ios/**/default.perspectivev3
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+google-services.json
+GoogleService-Info.plist
