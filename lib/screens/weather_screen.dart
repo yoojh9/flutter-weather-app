@@ -12,6 +12,7 @@ import '../widgets/daily_weather_list.dart';
 import '../widgets/hourly_weather_list.dart';
 import '../widgets/current_weather_widget.dart';
 import '../widgets/drawer_menu.dart';
+import '../widgets/ads_banner_page.dart';
 
 
 
@@ -108,7 +109,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
 
           CurrentWeatherWidget(weather.currentWeather),
+          
           HourlyWeatherList(weather.hourlyWeatherList.items),
+          AdsBannerPage(),
+          //SizedBox(height: ScreenUtil().setHeight(20)),
           DailyWeatherList(weather.dailyWeatherList.items),
         ],
       ),

@@ -14,7 +14,7 @@ class HourlyWeatherList extends StatelessWidget {
     return SliverToBoxAdapter(
       child: Container(
         height: ScreenUtil().setHeight(100),
-        margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(10),), 
+        margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(25),), 
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           itemBuilder: (ctx, i) => HourlyWeatherItem(i, hourlyWeatherList[i].hour, hourlyWeatherList[i].icon, hourlyWeatherList[i].temp),

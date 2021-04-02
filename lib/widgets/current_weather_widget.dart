@@ -26,7 +26,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                 : Image.asset('assets/images/weather/${currentWeather.icon}.png', height: ScreenUtil().setHeight(120),),
               Text('${currentWeather.temp == null ? ' ': currentWeather.temp}°',  style: Theme.of(context).textTheme.headline1,),
               Text('최고:${currentWeather.tempMax == null ? ' ' : currentWeather.tempMax}°   최저:${currentWeather.tempMin == null ? ' ' :currentWeather.tempMin}°', 
-                style: Theme.of(context).textTheme.bodyText2,)
+                style: Theme.of(context).textTheme.bodyText2,),
           ],
         ),
       ),

@@ -1,8 +1,11 @@
 import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/screen_util.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
 import '../screens/weather_screen.dart';
 
@@ -15,25 +18,101 @@ class VersionScreen extends StatefulWidget {
 }
 
 class _VersionScreenState extends State<VersionScreen> {
-  var _version;
+  String _version;
+  String _newVersion;
+  bool _isLatest = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     _getPackageInfo();
+    _checkNewVersion();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    if(_version!=null && _newVersion!=null){
+      print('version:$_version, newVersion:$_newVersion');
+      setState(() {
+        _isLatest = _version.compareTo(_newVersion).isNegative;
+      });
+    }
   }
 
   void _getPackageInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    if(packageInfo.version!=null){
+      setState(() {
+        _version = packageInfo.version;
+      });
+    }
 
+  }
+
+  void _checkNewVersion() async {
+    final RemoteConfig remoteConfig = RemoteConfig.instance;
+    await remoteConfig.setConfigSettings(RemoteConfigSettings(
+      fetchTimeout: Duration(seconds: 10),
+      minimumFetchInterval: Duration(hours: 1),
+    ));
+    await remoteConfig.setDefaults(<String, dynamic>{
+      "latest_version": '1.0.0',
+    });
+
+    await remoteConfig.fetchAndActivate();
+
+    print('latest_version: ' + remoteConfig.getString('latest_version'));
+    
     setState(() {
-      _version = packageInfo.version;
+      _newVersion = remoteConfig.getString('latest_version');
     });
   }
+  
 
   void _back(){
     Navigator.of(context).pushReplacementNamed(WeatherScreen.routeName);
+  }
+
+  void _showVersionUpdateDialog(ctx) async {
+    await showDialog(
+      context: ctx, 
+      builder: (BuildContext ctx2){
+        String title = "오늘날씨 버전 업그레이드";
+        String message = "지금 바로 업데이트 하시겠습니까?";
+
+        return Platform.isIOS
+        ? CupertinoAlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text('업데이트 하기'),
+              onPressed: _launchAppStore,
+            ),
+            TextButton(child: Text('나중에'), onPressed: () => Navigator.pop(ctx2), )
+          ],
+        )
+        : AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text('업데이트 하기'),
+              onPressed: _launchAppStore,
+            ),
+            TextButton(child: Text('나중에'), onPressed: () => Navigator.pop(ctx2), )
+          ],
+        );
+      }
+    );
+  }
+
+  void _launchAppStore(){
+    LaunchReview.launch(androidAppId: "kr.jeonghyun.weather_app", iOSAppId: "585027354");
   }
 
   @override
@@ -69,14 +148,36 @@ class _VersionScreenState extends State<VersionScreen> {
           Image.asset('assets/images/048-umbrella.png', height: ScreenUtil().setHeight(120),),
           Column(
             children: [
-              SizedBox(height: ScreenUtil().setHeight(10),),
-              Text('최신버전입니다', style: Theme.of(ctx).textTheme.headline6.copyWith(color: Colors.black87)),
-              SizedBox(height: ScreenUtil().setHeight(10),),
-              Text('현재버전: $_version', style: Theme.of(ctx).textTheme.bodyText2.copyWith(color: Colors.black87))
+              ..._versionContent(ctx)
             ],
           )
         ],
       )
     );
+  }
+
+  List<Widget> _versionContent(BuildContext ctx){
+    if(_isLatest) {
+      return [
+        SizedBox(height: ScreenUtil().setHeight(15),),
+        Text('최신버전입니다', style: Theme.of(ctx).textTheme.bodyText2.copyWith(color: Colors.black87, fontWeight: FontWeight.bold)),
+        SizedBox(height: ScreenUtil().setHeight(10),),
+        Text('현재버전: v$_version', style: Theme.of(ctx).textTheme.bodyText2.copyWith(color: Colors.black87))
+      ];
+    } else {
+      return [
+        SizedBox(height: ScreenUtil().setHeight(15),),
+        Text('최신버전: ${_newVersion == null ? "-" : _newVersion}', style: Theme.of(ctx).textTheme.bodyText2.copyWith(color: Colors.black87, fontWeight: FontWeight.bold)),
+        SizedBox(height: ScreenUtil().setHeight(10),),
+        Text('현재버전: v$_version', style: Theme.of(ctx).textTheme.bodyText2.copyWith(color: Colors.black87)),
+        SizedBox(height: ScreenUtil().setHeight(20),),
+        TextButton(
+          onPressed: (){
+            _showVersionUpdateDialog(ctx);
+          },
+          child: Text('업데이트 하기', style: TextStyle(fontSize: ScreenUtil().setHeight(16)),),
+        )
+      ];
+    }
   }
 }

@@ -1,8 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/models/license.dart';
+import './models/license.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import './screens/error_screen.dart';
 import './screens/version_screen.dart';
 import './screens/weather_screen.dart';
 import './screens/splash_screen.dart';
@@ -12,8 +15,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 void main() async{
   await DotEnv.load();
+  await Firebase.initializeApp();
+
+  MobileAds.instance.initialize();
   License.load();
-  
+
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => LocationInfo(),),
@@ -107,6 +113,7 @@ class MyApp extends StatelessWidget {
           routes: {
             WeatherScreen.routeName: (ctx) => WeatherScreen(),
             VersionScreen.routeName: (ctx) => VersionScreen(),
+            ErrorScreen.routeName: (ctx) => ErrorScreen(),
           }
       )
     );
