@@ -7,7 +7,7 @@
         android:icon="@mipmap/ic_launcher">
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-7773043801869125~2495291854"/>
+            android:value="############"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
