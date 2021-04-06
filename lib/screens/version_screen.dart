@@ -20,28 +20,16 @@ class VersionScreen extends StatefulWidget {
 class _VersionScreenState extends State<VersionScreen> {
   String _version;
   String _newVersion;
-  bool _isLatest = false;
+  bool _isLatest = true;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _getPackageInfo();
     _checkNewVersion();
   }
 
-  @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    if(_version!=null && _newVersion!=null){
-      print('version:$_version, newVersion:$_newVersion');
-      setState(() {
-        _isLatest = _version.compareTo(_newVersion).isNegative;
-      });
-    }
-  }
 
   void _getPackageInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -50,7 +38,6 @@ class _VersionScreenState extends State<VersionScreen> {
         _version = packageInfo.version;
       });
     }
-
   }
 
   void _checkNewVersion() async {
@@ -69,6 +56,7 @@ class _VersionScreenState extends State<VersionScreen> {
     
     setState(() {
       _newVersion = remoteConfig.getString('latest_version');
+      _isLatest = _version == _newVersion;
     });
   }
   
@@ -81,7 +69,7 @@ class _VersionScreenState extends State<VersionScreen> {
     await showDialog(
       context: ctx, 
       builder: (BuildContext ctx2){
-        String title = "오늘날씨 버전 업그레이드";
+        String title = "투데이날씨 버전 업그레이드";
         String message = "지금 바로 업데이트 하시겠습니까?";
 
         return Platform.isIOS
@@ -112,7 +100,7 @@ class _VersionScreenState extends State<VersionScreen> {
   }
 
   void _launchAppStore(){
-    LaunchReview.launch(androidAppId: "kr.jeonghyun.weather_app", iOSAppId: "585027354");
+    LaunchReview.launch(androidAppId: "kr.jeonghyun.today_weather", iOSAppId: "1561301672");
   }
 
   @override
@@ -120,10 +108,10 @@ class _VersionScreenState extends State<VersionScreen> {
     return Platform.isIOS 
       ? CupertinoPageScaffold(
         navigationBar: CupertinoNavigationBar(
-          middle: const Text('버전정보'),
+          middle: Text("버전정보", style: Theme.of(context).textTheme.headline6.copyWith(color :Colors.black87),),
           border: Border(bottom: BorderSide(color: Colors.transparent)),
           leading: GestureDetector(
-            child: Icon(CupertinoIcons.back,),
+            child: Icon(CupertinoIcons.back, color: Colors.black87,),
             onTap: _back,
           ), 
         ),
@@ -131,8 +119,8 @@ class _VersionScreenState extends State<VersionScreen> {
       )
       : Scaffold(
         appBar: AppBar(
-          title: Text("버전정보"),
-          leading: IconButton(icon: Icon(Icons.arrow_back) , onPressed: _back,),    
+          title: Text("버전정보", style: Theme.of(context).textTheme.headline6.copyWith(color :Colors.black87),),
+          leading: IconButton(icon: Icon(Icons.arrow_back), color: Colors.black87, onPressed: _back,),    
           backgroundColor: Colors.transparent,
         ),
         body: _contentBody(context),

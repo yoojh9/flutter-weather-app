@@ -3,6 +3,7 @@ import './drawer_header_section.dart';
 import '../screens/version_screen.dart';
 import '../models/license.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class DrawerMenu extends StatelessWidget {
@@ -12,25 +13,46 @@ class DrawerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Column(
         children: [
-          DrawerHeaderSection(),
-          ListTile(
-            title: Text('버전정보'),
-            onTap: (){
-              Navigator.of(context).pushNamed(VersionScreen.routeName);
-            },
-          ),
-          ListTile(
-            title: Text('위치기반이용약관'),
-            onTap: _launchUrl,
-          ),
-          ListTile(
-            title: Text('오픈소스라이센스'),
-            onTap: (){
-              License.showLicensePage(context: context);
-            },
+          Container(
+            height: ScreenUtil().setHeight(300),
+            child: DrawerHeaderSection(),),
+          Expanded(
+            child: ListView(
+              itemExtent: ScreenUtil().setHeight(50),
+              children: [
+                ListTile(
+                  title: Text('버전정보', 
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      color: Colors.black87
+                    ),
+                  ),
+                  onTap: (){
+                    Navigator.of(context).pushNamed(VersionScreen.routeName);
+                  },
+                ),
+                ListTile(
+                  title: Text('위치기반이용약관', 
+                    style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      color: Colors.black87
+                    )
+                  ),
+                  onTap: _launchUrl,
+                ),
+                ListTile(
+                  title: Text('오픈소스라이센스',
+                   style: Theme.of(context).textTheme.bodyText1.copyWith(
+                      color: Colors.black87
+                    )
+                  ),
+                  onTap: (){
+                    License.showLicensePage(context: context);
+                  },
+                )
+            ],)
           )
+
         ],
       )
     );

@@ -28,24 +28,23 @@ class _DrawerHeaderSectionState extends State<DrawerHeaderSection> {
   @override
   Widget build(BuildContext context) {
     return DrawerHeader(
-      child: Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              backgroundColor: Colors.white,
-              minRadius: ScreenUtil().setHeight(20),
-              maxRadius: ScreenUtil().setHeight(30),
-              child: ClipOval(
-                child: Image.asset('assets/images/048-umbrella.png')
-              ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircleAvatar(
+            backgroundColor: Colors.white,
+            minRadius: ScreenUtil().setHeight(20),
+            maxRadius: ScreenUtil().setHeight(30),
+            child: ClipOval(
+              child: Image.asset('assets/images/048-umbrella.png')
             ),
-            SizedBox(height: ScreenUtil().setHeight(10)),
-            Text('오늘날씨', style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black87, fontSize: ScreenUtil().setSp(16))),
-            Text('v$_version', style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54))
-          ],)
-      ),
+          ),
+          SizedBox(height: ScreenUtil().setHeight(10)),
+          FittedBox(child: Text('투데이날씨', style: Theme.of(context).textTheme.bodyText2.copyWith(color: Colors.black87, fontSize: ScreenUtil().setSp(16)))),
+          SizedBox(height: ScreenUtil().setHeight(5)),
+          FittedBox(child: Text('v$_version', style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.black54)))
+        ],),
     );
   }
 }

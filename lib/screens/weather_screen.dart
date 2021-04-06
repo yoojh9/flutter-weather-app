@@ -100,11 +100,6 @@ class _WeatherScreenState extends State<WeatherScreen> {
               margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(10)),
               alignment: Alignment.bottomCenter,
               child: Text('${location.isUpdated ? location.address : ''}', style: Theme.of(ctx).textTheme.headline4, textAlign: TextAlign.center,),
-              // ListView(
-              //   children: [
-              //     Text('${location.isUpdated ? location.address : ''}', style: Theme.of(ctx).textTheme.headline4, textAlign: TextAlign.center,),
-              //   ]
-              // ),
             ),
           ),
 

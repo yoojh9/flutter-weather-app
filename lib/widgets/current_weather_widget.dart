@@ -21,6 +21,7 @@ class CurrentWeatherWidget extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline4, 
                 textAlign: TextAlign.center,)
               ),
+              SizedBox(height: ScreenUtil().setHeight(10),),
               currentWeather.icon == null 
                 ? Container() 
                 : Image.asset('assets/images/weather/${currentWeather.icon}.png', height: ScreenUtil().setHeight(120),),

@@ -41,12 +41,17 @@ class MyApp extends StatelessWidget {
       statusBarColor: Colors.transparent,
       statusBarBrightness: Brightness.dark,
     ));
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp
+    ]);
+
     return ScreenUtilInit(
       designSize: Size(375, 812),
       allowFontScaling: false,
         builder: () => MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: '오늘날씨',
+          title: '투데이날씨',
           theme: ThemeData(
             //primarySwatch: CustomColor.blue,
             accentColor: Color(0xFFf5a44d),

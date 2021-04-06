@@ -36,8 +36,10 @@ class Weather with ChangeNotifier{
     final current = body['current'];
     final daily = body['daily'];
     
-    currentWeather.description = current['weather'][0]['description'];
+    currentWeather.id = current['weather'][0]['id'];
+    //currentWeather.description = current['weather'][0]['description'];
     currentWeather.icon = current['weather'][0]['icon'];
+
     currentWeather.temp =  current['temp'].toInt();
     currentWeather.tempMin = daily[0]['temp']['min'].toInt();
     currentWeather.tempMax = daily[0]['temp']['max'].toInt();

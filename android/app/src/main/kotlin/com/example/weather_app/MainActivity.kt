@@ -1,4 +1,4 @@
-package kr.jeonghyun.weather_app
+package kr.jeonghyun.today_weather
 
 import io.flutter.embedding.android.FlutterActivity
 
