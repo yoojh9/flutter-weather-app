@@ -8,11 +8,28 @@ class LocationInfo with ChangeNotifier{
   double _longitude;
   Address _address;
   bool _isUpdated = false;
+  int _x;
+  int _y;
 
   get latitude => _latitude;
   get longitude => _longitude;
   get address => _address.subLocality == null ? _address.featureName : _address.subLocality;
   get isUpdated => _isUpdated;
+  get x => _x;
+  get y => _y;
+  
+  set x(int value){
+    _x = value;
+  }
+
+  set y(int value){
+    _y = value;
+  }
+
+
+  
+
+
 
   // LocationInfo(){
   //   getLocation().then((_){

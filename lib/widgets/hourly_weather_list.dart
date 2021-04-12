@@ -10,7 +10,6 @@ class HourlyWeatherList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('hourly: $hourlyWeatherList[0]');
     return SliverToBoxAdapter(
       child: Container(
         height: ScreenUtil().setHeight(100),

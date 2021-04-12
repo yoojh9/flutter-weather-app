@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screen_util.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/screens/error_screen.dart';
+import 'package:weather_app/utils/weather_xy.dart';
 import '../providers/weather.dart';
 import '../providers/location_info.dart';
 import './weather_screen.dart';
@@ -43,9 +44,19 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
 
   void initLocation() async {
     print('initLocation()');
-    LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
+
     try {
+      LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
+      Weather_xy weatherXY = changelaluMap(locationInfo.longitude, locationInfo.latitude);
+
+      locationInfo.x = weatherXY.x;
+      locationInfo.y = weatherXY.y;
+
+      print('x='+locationInfo.x.toString() + "y=" +locationInfo.y.toString());
       await Provider.of<Weather>(context, listen: false).getWeather(locationInfo.latitude, locationInfo.longitude);
+        
+      
+
       Navigator.pushReplacementNamed(context, WeatherScreen.routeName);
     } catch(error){
       print(error);

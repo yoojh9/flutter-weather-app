@@ -46,7 +46,8 @@ class _AdsBannerPageState extends State<AdsBannerPage> {
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-      child: Container(
+      child: _isAdLoaded 
+      ? Container(
           margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(20)),
           child: Container(
             alignment: Alignment.center,
@@ -55,6 +56,7 @@ class _AdsBannerPageState extends State<AdsBannerPage> {
             height: _ad.size.height.toDouble(),
           ),
       )
+      : Container()
     );
   }
 }
