@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screen_util.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
+import '../widgets/splash_widget.dart';
 import '../providers/location_info.dart';
 import '../providers/weather.dart';
 import '../theme/color.dart';
@@ -42,11 +43,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   void _refresh() async{
     LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
-    await Provider.of<Weather>(context, listen: false).getWeather(locationInfo.latitude, locationInfo.longitude);
+    await Provider.of<Weather>(context, listen: false).getWeather(locationInfo);
   }
 
   void _toggle() {
-    print('toggle');
     _innerDrawerKey.currentState.toggle(
       direction: InnerDrawerDirection.start
     );
@@ -70,10 +70,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
     
       scaffold: Platform.isIOS 
         ? CupertinoPageScaffold(
-          child: _weatherBody(context, location, weather)
+          child: 
+            weather.currentWeather.id == null ? SplashWidget() : _weatherBody(context, location, weather)
         )
         : Scaffold(
-          body: _weatherBody(context, location, weather),
+          body: weather.currentWeather.id == null ? SplashWidget() : _weatherBody(context, location, weather),
         )
     );
   }
@@ -105,7 +106,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
           CurrentWeatherWidget(weather.currentWeather),
           
-          HourlyWeatherList(weather.hourlyWeatherList.items),
+          HourlyWeatherList(weather.currentWeather, weather.hourlyWeatherList.items),
           AdsBannerPage(),
           //SizedBox(height: ScreenUtil().setHeight(20)),
           DailyWeatherList(weather.dailyWeatherList.items),

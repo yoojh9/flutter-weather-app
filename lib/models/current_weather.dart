@@ -19,6 +19,7 @@ class CurrentWeather{
         case 501: case 502: case 521: return '비'; break;
         case 503: case 522: return '많은 비'; break;
         case 504: case 531: return '폭우'; break;
+        case 505: return '소나기'; break;
         case 511: return '우박'; break;
 
         case 600: case 620: return '약간 눈'; break;

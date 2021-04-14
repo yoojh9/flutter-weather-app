@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/screen_util.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:package_info/package_info.dart';
@@ -42,21 +40,36 @@ class _VersionScreenState extends State<VersionScreen> {
 
   void _checkNewVersion() async {
     final RemoteConfig remoteConfig = RemoteConfig.instance;
+    String newVersion = "";
+
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
       fetchTimeout: Duration(seconds: 10),
       minimumFetchInterval: Duration(hours: 1),
     ));
-    await remoteConfig.setDefaults(<String, dynamic>{
-      "latest_version": '1.0.0',
-    });
 
-    await remoteConfig.fetchAndActivate();
-
-    print('latest_version: ' + remoteConfig.getString('latest_version'));
+    if(Platform.isIOS){
+      await remoteConfig.setDefaults(<String, dynamic>{
+        "ios_latest_version": '1.0.0',
+      });
+      await remoteConfig.fetchAndActivate();
+      newVersion = remoteConfig.getString('ios_latest_version');
+    } else if(Platform.isAndroid){
+      await remoteConfig.setDefaults(<String, dynamic>{
+        "android_latest_version": '1.0.0',
+      });
+      await remoteConfig.fetchAndActivate();
+      newVersion = remoteConfig.getString('android_latest_version');
+    } else {
+      await remoteConfig.setDefaults(<String, dynamic>{
+        "latest_version": '1.0.0',
+      });
+      await remoteConfig.fetchAndActivate();
+      newVersion = remoteConfig.getString('latest_version');
+    }
     
     setState(() {
-      _newVersion = remoteConfig.getString('latest_version');
-      _isLatest = _version == _newVersion;
+      _newVersion = newVersion;
+      _isLatest = int.parse(_version.replaceAll(".", "")) >= int.parse(_newVersion.replaceAll(".", ""));
     });
   }
   

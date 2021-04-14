@@ -25,7 +25,7 @@ void main() async{
       ChangeNotifierProvider(create: (_) => LocationInfo(),),
       ChangeNotifierProxyProvider<LocationInfo, Weather>(
         create: (_) => Weather(),
-        update: (_, locationInfo, currentWeather) => currentWeather..setWeatherLocation(locationInfo.latitude, locationInfo.longitude) )
+        update: (_, locationInfo, currentWeather) => currentWeather..setWeatherLocation(locationInfo) )
       //ChangeNotifierProvider(create: (_) => CurrentWeather()),
     ],
     child: MyApp()),
@@ -34,12 +34,14 @@ void main() async{
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+  
+  // FirebaseAnalytics analytics = FirebaseAnalytics();
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
     ));
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitDown,
@@ -113,12 +115,15 @@ class MyApp extends StatelessWidget {
               )
             )
           ),
-          
+          // navigatorObservers: [
+          //   FirebaseAnalyticsObserver(analytics: analytics)
+          // ],
           home: SplashScreen(),
           routes: {
             WeatherScreen.routeName: (ctx) => WeatherScreen(),
             VersionScreen.routeName: (ctx) => VersionScreen(),
             ErrorScreen.routeName: (ctx) => ErrorScreen(),
+            SplashScreen.routeName: (ctx) => SplashScreen(),
           }
       )
     );
