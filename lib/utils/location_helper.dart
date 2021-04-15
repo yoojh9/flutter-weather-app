@@ -47,7 +47,8 @@ Future<Position> getPosition() async {
 */
 
 Future<List<Address>> getAddress(double latitude, double longitude) async {
-  return await Geocoder.local.findAddressesFromCoordinates(new Coordinates(latitude, longitude));
+  return await Geocoder.local
+      .findAddressesFromCoordinates(new Coordinates(latitude, longitude));
 }
 
 // Future<bool> requestLocationPermission() async {
@@ -74,6 +75,8 @@ Future<List<Address>> getAddress(double latitude, double longitude) async {
 //   return true;
 // }
 
+Future<bool> checkLocationPermission() async {}
+
 Future<LocationData> getLocation() async {
   Location location = new Location();
 
@@ -84,8 +87,7 @@ Future<LocationData> getLocation() async {
   if (!_serviceEnabled) {
     _serviceEnabled = await location.requestService();
     if (!_serviceEnabled) {
-      //return null;
-      return location.getLocation();
+      return null;
     }
   }
 
@@ -93,8 +95,7 @@ Future<LocationData> getLocation() async {
   if (_permissionGranted == PermissionStatus.denied) {
     _permissionGranted = await location.requestPermission();
     if (_permissionGranted != PermissionStatus.granted) {
-      //return null;
-      return location.getLocation();
+      return null;
     }
   }
 

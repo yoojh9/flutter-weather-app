@@ -4,7 +4,7 @@ import 'package:location/location.dart';
 import '../utils/location_xy.dart';
 import '../utils/location_helper.dart' as locationHelper;
 
-class LocationInfo with ChangeNotifier{
+class LocationInfo with ChangeNotifier {
   double _latitude;
   double _longitude;
   Address _address;
@@ -15,18 +15,23 @@ class LocationInfo with ChangeNotifier{
 
   get latitude => _latitude;
   get longitude => _longitude;
-  get address => _address.subLocality == null ? _address.featureName : _address.subLocality;
+  get address => _address.subLocality == null
+      ? _address.featureName
+      : _address.subLocality;
   get isUpdated => _isUpdated;
   get isKor => _isKor;
   get x => _x;
   get y => _y;
 
-
-  Future<LocationInfo> getLocation() async{
-
+  Future<LocationInfo> getLocation() async {
     LocationData locationData = await locationHelper.getLocation();
-    List<Address> addressList = await locationHelper.getAddress(locationData.latitude, locationData.longitude);
-    LocationXY locationXY = changeGridLocation(locationData.longitude, locationData.latitude);
+
+    if (locationData == null) return null;
+
+    List<Address> addressList = await locationHelper.getAddress(
+        locationData.latitude, locationData.longitude);
+    LocationXY locationXY =
+        changeGridLocation(locationData.longitude, locationData.latitude);
 
     _latitude = locationData.latitude;
     _longitude = locationData.longitude;
@@ -36,13 +41,13 @@ class LocationInfo with ChangeNotifier{
 
     _isUpdated = true;
 
-    if((locationXY.x >= 53 && locationXY.x <= 99 ) && (locationXY.y >= 69 && locationXY.x <= 99 )){
+    if ((locationXY.x >= 53 && locationXY.x <= 99) &&
+        (locationXY.y >= 69 && locationXY.x <= 99)) {
       _isKor = true;
     }
 
     notifyListeners();
 
     return this;
-
   }
 }
