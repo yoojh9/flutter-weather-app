@@ -2,6 +2,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/screen_util.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
@@ -88,7 +89,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
       child: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor:  CustomColor.getWeatherColor(weather.currentWeather.icon) ,
+            backgroundColor: CustomColor.getWeatherColor(weather.currentWeather.icon) ,
             pinned: true,
             //floating: true,
             elevation: 0,

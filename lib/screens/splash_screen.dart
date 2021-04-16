@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/screens/error_screen.dart';
+import './error_screen.dart';
 import '../widgets/splash_widget.dart';
 import '../providers/weather.dart';
 import '../providers/location_info.dart';
@@ -18,13 +17,17 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
+  bool loaded = false;
+
   @override
   void initState() {
     print('initState');
     WidgetsBinding.instance.addObserver(this);
-    initLocation();
+
+    if(!loaded){
+      initLocation();
+    }
 
     super.initState();
   }
@@ -41,9 +44,10 @@ class _SplashScreenState extends State<SplashScreen>
       // went to Background
     }
     if (state == AppLifecycleState.resumed) {
-      print('resume');
       Timer(Duration(seconds: 1), () {
-        initLocation();
+        if(!loaded){
+          initLocation();
+        }
       });
     }
   }
@@ -55,18 +59,21 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void initLocation() async {
-    print('initLocation()');
-    try {
-      LocationInfo locationInfo =
-          await Provider.of<LocationInfo>(context, listen: false).getLocation();
+    setState(() {
+      loaded = true;
+    });
 
+    try {
+      LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
       print('locationInfo = $locationInfo');
 
       if (locationInfo == null) {
         await showLocationPermissionDialog();
+        setState(() {
+          loaded = false;
+        });
       } else {
-        await Provider.of<Weather>(context, listen: false)
-            .getWeather(locationInfo);
+        await Provider.of<Weather>(context, listen: false).getWeather(locationInfo);
         await Navigator.pushReplacementNamed(context, WeatherScreen.routeName);
       }
     } catch (error) {
@@ -95,23 +102,25 @@ class _SplashScreenState extends State<SplashScreen>
                         await openAppSettings();
                       })
                 ],
-              ));
+              )
+        );
     } else {
       return showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
                 title: Text('위치 정보 권한 설정'),
-                content: Text('투데이날씨 앱을 사용하기 위해서는 위치 권한 허용이 필요합니다'),
+                content: Text('투데이날씨 앱을 사용하기 위해서는 위치 권한 허용이 필요합니다. 앱 설정 > 권한에서 위치를 추가해주세요.'),
                 actions: [
                   TextButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
-                      await Permission.contacts.shouldShowRequestRationale;
+                      await openAppSettings();
                     },
                     child: Text('확인'),
                   )
                 ],
-              ));
+          )
+      );
     }
   }
 }
