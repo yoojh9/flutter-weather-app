@@ -135,3 +135,85 @@ class CustomColor {
     }
   );
 }
+
+
+class DustColor {
+  static MaterialColor getDustColor(String grade) {
+    switch (grade) {
+      case "1": 
+        return color_dust_best; break;
+      case "2": 
+        return color_dust_good; break;
+      case "3":
+        return color_dust_bad; break;
+      case "4":
+        return color_dust_very_bad; break;
+      default:
+        return color_dust_best; break;
+    }
+  }
+
+  static const MaterialColor color_dust_best = MaterialColor(
+    0xFF10FFFF,
+    <int, Color>{
+      50: Color(0xFF10FFFF),
+      100: Color(0xFF10FFFF),
+      200: Color(0xFF10FFFF),
+      300: Color(0xFF10FFFF),
+      400: Color(0xFF10FFFF),
+      500: Color(0xFF10FFFF),
+      600: Color(0xFF10FFFF),
+      700: Color(0xFF10FFFF),
+      800: Color(0xFF10FFFF),
+      900: Color(0xFF10FFFF),
+    }
+  );
+
+  static const MaterialColor color_dust_good = MaterialColor(
+    0xFF76FF03,
+    <int, Color>{
+      50: Color(0xFF76FF03),
+      100: Color(0xFF76FF03),
+      200: Color(0xFF76FF03),
+      300: Color(0xFF76FF03),
+      400: Color(0xFF76FF03),
+      500: Color(0xFF76FF03),
+      600: Color(0xFF76FF03),
+      700: Color(0xFF76FF03),
+      800: Color(0xFF76FF03),
+      900: Color(0xFF76FF03),
+    }
+  );
+
+  static const MaterialColor color_dust_bad = MaterialColor(
+    0xFFFDF86D,
+    <int, Color>{
+      50: Color(0xFFFDF86D),
+      100: Color(0xFFFDF86D),
+      200: Color(0xFFFDF86D),
+      300: Color(0xFFFDF86D),
+      400: Color(0xFFFDF86D),
+      500: Color(0xFFFDF86D),
+      600: Color(0xFFFDF86D),
+      700: Color(0xFFFDF86D),
+      800: Color(0xFFFDF86D),
+      900: Color(0xFFFDF86D),
+    }
+  );
+
+  static const MaterialColor color_dust_very_bad = MaterialColor(
+    0xFFFFBFD0,
+    <int, Color>{
+      50: Color(0xFFFFBFD0),
+      100: Color(0xFFFFBFD0),
+      200: Color(0xFFFFBFD0),
+      300: Color(0xFFFFBFD0),
+      400: Color(0xFFFFBFD0),
+      500: Color(0xFFFFBFD0),
+      600: Color(0xFFFFBFD0),
+      700: Color(0xFFFFBFD0),
+      800: Color(0xFFFFBFD0),
+      900: Color(0xFFFFBFD0),
+    }
+  );
+}

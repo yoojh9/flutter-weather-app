@@ -5,12 +5,12 @@ import 'package:intl/intl.dart';
 
 
 Future<dynamic> getKorCurrentWeather(int x, int y) async {
-    final API_KEY = env['KOR_WEATHER_API_KEY'];
+    final apiKey = env['KOR_WEATHER_API_KEY'];
     DateTime dateTime = DateTime.now().toUtc().add(Duration(hours: 9)).subtract(Duration(minutes: 45));
     final baseDate = DateFormat('yyyyMMdd').format(dateTime);
     final baseTime = DateFormat.H().format(dateTime)+"30";
 
-    final urlStr = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst?serviceKey=$API_KEY&pageNo=1&numOfRows=100&dataType=JSON&base_date=$baseDate&base_time=$baseTime&nx=$x&ny=$y';
+    final urlStr = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getUltraSrtFcst?serviceKey=$apiKey&pageNo=1&numOfRows=100&dataType=JSON&base_date=$baseDate&base_time=$baseTime&nx=$x&ny=$y';
     final url = Uri.parse(urlStr);
 
     try {
@@ -36,10 +36,10 @@ Future<dynamic> getKorCurrentWeather(int x, int y) async {
 
 
 /*
- * 02:00 예보 호출로 최저기온 최고기온 얻어옴, 
+ * 02:00 예보 호출로 최저기온 최고기온 얻어옴
  */
 Future<dynamic> getKorMaxMinTemp(int x, int y) async {
-    final API_KEY = env['KOR_WEATHER_API_KEY'];
+    final apiKey = env['KOR_WEATHER_API_KEY'];
 
     DateTime dateTime = DateTime.now().toUtc().add(Duration(hours: 9)).subtract(Duration(minutes: 10));
     String baseDate = DateFormat('yyyyMMdd').format(dateTime);
@@ -49,7 +49,7 @@ Future<dynamic> getKorMaxMinTemp(int x, int y) async {
       baseDate = DateFormat('yyyyMMdd').format(dateTime.subtract(Duration(days: 1)));
     }
 
-    final urlStr = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst?serviceKey=$API_KEY&pageNo=1&numOfRows=100&dataType=JSON&base_date=$baseDate&base_time=0200&nx=$x&ny=$y';
+    final urlStr = 'http://apis.data.go.kr/1360000/VilageFcstInfoService/getVilageFcst?serviceKey=$apiKey&pageNo=1&numOfRows=100&dataType=JSON&base_date=$baseDate&base_time=0200&nx=$x&ny=$y';
     final url = Uri.parse(urlStr);
 
     try {

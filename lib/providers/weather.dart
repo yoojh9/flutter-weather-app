@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:weather_app/models/daily_weather.dart';
 import '../providers/location_info.dart';
 import '../models/current_weather.dart';
 import '../models/hourly_weather.dart';
+import '../models/weekly_weather.dart';
 import '../network/open_weather_api.dart' as openWeatherAPI;
 import '../network/kor_weather_api.dart' as korWeatherAPI;
 
@@ -11,63 +10,74 @@ class Weather with ChangeNotifier{
   LocationInfo _locationInfo;
   CurrentWeather currentWeather;
   HourlyWeatherList hourlyWeatherList;
-  DailyWeatherList dailyWeatherList;
+  WeeklyWeatherList weeklyWeatherList;
   bool _isRequested = false;
 
-  void setWeatherLocation(LocationInfo locationInfo) {
+  void setLocation(LocationInfo locationInfo) {
     _locationInfo = locationInfo;
     //getWeather(_locationInfo);
   }
   
-  Future<void> getWeather(LocationInfo locationInfo) async{
-    if(locationInfo.latitude == null || locationInfo.longitude == null) return;
+  Future<void> getWeather() async{
+    if(_locationInfo.latitude == null || _locationInfo.longitude == null) return;
 
     currentWeather = CurrentWeather();
     hourlyWeatherList = HourlyWeatherList();
-    dailyWeatherList = DailyWeatherList();
+    weeklyWeatherList = WeeklyWeatherList();
 
     if(!_isRequested){
       _isRequested = true;
-      if(locationInfo.isKor) {
-        List currentList = await korWeatherAPI.getKorCurrentWeather(locationInfo.x, locationInfo.y);
-        List minMaxTempList = await korWeatherAPI.getKorMaxMinTemp(locationInfo.x, locationInfo.y);
-        final forecast =  await openWeatherAPI.getOpenWeatherAPI(locationInfo.latitude, locationInfo.longitude);
-
-        setWeatherDataFromKorWether(locationInfo, currentList, minMaxTempList, forecast);
+      
+      if(_locationInfo.isKor) {
+        await setWeatherDataFromKorWeather(_locationInfo);
       } else {
-        var body = await openWeatherAPI.getOpenWeatherAPI(locationInfo.latitude, locationInfo.longitude);
-        setWeatherDataFromOpenWeatherMap(body);
+        await setWeatherDataFromOpenWeatherMap(_locationInfo);
       }
       notifyListeners();    
     }
+
     _isRequested = false;
 
   }
   
   // 한국일 경우, 현재날씨는 기상청 데이터에서 가져오도록 변경.
   // 나머지 시간별 날씨, 주간 날씨는 일단 openWeatherMapAPI를 쓰는걸로..
-  void setWeatherDataFromKorWether(locationInfo, current, minMaxTemp, forecast){
-    setCurrenWeatherCodeWithKorWeather(current);
-    setMinMaxTempWithKorWeather(minMaxTemp);
+  Future<void> setWeatherDataFromKorWeather(locationInfo) async {
+    List currentList = await korWeatherAPI.getKorCurrentWeather(locationInfo.x, locationInfo.y);
+    List minMaxTempList = await korWeatherAPI.getKorMaxMinTemp(locationInfo.x, locationInfo.y);
+    final forecast =  await openWeatherAPI.getOpenWeatherAPI(locationInfo.latitude, locationInfo.longitude);
+
+    setCurrenWeatherCodeWithKorWeather(currentList, forecast);
+    setMinMaxTempWithKorWeather(minMaxTempList);
     setHourlyOpenWeather(forecast);
     setDailyOpenWeather(forecast);
+
   }
 
-  void setWeatherDataFromOpenWeatherMap(body){
+  // 외국일 경우 openWeatherAPI 이용
+  Future<void> setWeatherDataFromOpenWeatherMap(locationInfo) async {
+    var body = await openWeatherAPI.getOpenWeatherAPI(locationInfo.latitude, locationInfo.longitude);
+
     setCurrentOpenWeather(body);
     setHourlyOpenWeather(body);
     setDailyOpenWeather(body);
   }
 
-  void setCurrenWeatherCodeWithKorWeather(List currentItemList){
+  /*
+   * 기상청 동네예보 API 사용
+   */
+  void setCurrenWeatherCodeWithKorWeather(List currentItemList, final forecast){
+    final openWeathrApiBody = forecast['current'];
+    currentWeather.sunrise = openWeathrApiBody["sunrise"];
+    currentWeather.sunset = openWeathrApiBody['sunset'];
+    
     final tempItem = currentItemList.firstWhere((item) => item['category']=="T1H");
     currentWeather.temp = int.parse(tempItem['fcstValue']);
 
     final skyItem = currentItemList.firstWhere((item) => item['category']=="SKY");
     final ptyItem = currentItemList.firstWhere((item) => item['category']=="PTY");
 
-    DateTime dateTime = DateTime.now().toUtc().add(Duration(hours: 9));
-    int hour = int.parse(DateFormat.H().format(dateTime));
+    DateTime dateTime = DateTime.now().toLocal();
 
     switch (skyItem['fcstValue']) {
       case "1": currentWeather.id=800; currentWeather.icon="01";  break;
@@ -86,10 +96,17 @@ class Weather with ChangeNotifier{
       default: break;
     }
 
-    if(hour >= 7 && hour < 19) currentWeather.icon+="d";
-    else currentWeather.icon+="n";
+    // 일몰 일출 시간에 따라 아이콘 변경
+    if(dateTime.isAfter(currentWeather.sunriseDateTime) && dateTime.isBefore(currentWeather.sunsetDateTime)){
+      currentWeather.icon+="d";
+    } else {
+      currentWeather.icon+="n";
+    }
   }
 
+  /*
+   * OpenWeatherMap API 사용
+   */
   void setMinMaxTempWithKorWeather(List minMaxTempList){
 
     if(minMaxTempList == null) {
@@ -115,6 +132,9 @@ class Weather with ChangeNotifier{
     //currentWeather.description = current['weather'][0]['description'];
     currentWeather.icon = current['weather'][0]['icon'];
 
+    currentWeather.sunrise = current['current']["sunrise"];
+    currentWeather.sunset = current['current']['sunset'];
+
     currentWeather.temp =  current['temp'].toInt();
     currentWeather.tempMin = daily[0]['temp']['min'].toInt();
     currentWeather.tempMax = daily[0]['temp']['max'].toInt();
@@ -122,7 +142,6 @@ class Weather with ChangeNotifier{
 
   void setHourlyOpenWeather(body){
     List hourly = body['hourly'];
-
     hourly.forEach((item) {
       HourlyWeather hourlyWeather = HourlyWeather();
       hourlyWeather.dt = item['dt'];
@@ -136,14 +155,13 @@ class Weather with ChangeNotifier{
     List daily = body['daily'];
 
     daily.forEach((item) {
-      DailyWeather dailyWeather = DailyWeather();
-      dailyWeather.dt = item['dt'];
-      dailyWeather.icon = item['weather'][0]['icon'];
-      dailyWeather.tempMin = item['temp']['min'].toInt();
-      dailyWeather.tempMax = item['temp']['max'].toInt();
-      dailyWeatherList.addDailyWeather(dailyWeather);
+      WeeklyWeather weeklyWeather = WeeklyWeather();
+      weeklyWeather.dt = item['dt'];
+      weeklyWeather.icon = item['weather'][0]['icon'];
+      weeklyWeather.tempMin = item['temp']['min'].toInt();
+      weeklyWeather.tempMax = item['temp']['max'].toInt();
+      weeklyWeatherList.addDailyWeather(weeklyWeather);
     });
-
   }
 
 }

@@ -2,19 +2,21 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/screen_util.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
-import '../widgets/splash_widget.dart';
 import '../providers/location_info.dart';
 import '../providers/weather.dart';
+import '../providers/dust.dart';
 import '../theme/color.dart';
-import '../widgets/daily_weather_list.dart';
+import '../widgets/splash_widget.dart';
+import '../widgets/weekly_weather_list.dart';
 import '../widgets/hourly_weather_list.dart';
 import '../widgets/current_weather_widget.dart';
 import '../widgets/drawer_menu.dart';
 import '../widgets/ads_banner_page.dart';
+import '../widgets/current_dust_widget.dart';
+import '../widgets/footer_widget.dart';
 
 
 
@@ -44,7 +46,10 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
   void _refresh() async{
     LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
-    await Provider.of<Weather>(context, listen: false).getWeather(locationInfo);
+    await Provider.of<Weather>(context, listen: false).getWeather();
+    if(locationInfo.isKor){
+      await Provider.of<Dust>(context, listen: false).getDust();
+    }
   }
 
   void _toggle() {
@@ -81,6 +86,8 @@ class _WeatherScreenState extends State<WeatherScreen> {
   }
 
   Widget _weatherBody(BuildContext ctx, final location, final weather){
+    final dust = Provider.of<Dust>(context, listen:true);
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: ScreenUtil().setWidth(12)
@@ -106,11 +113,12 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
 
           CurrentWeatherWidget(weather.currentWeather),
-          
+          CurrentDustWidget(dust),
           HourlyWeatherList(weather.currentWeather, weather.hourlyWeatherList.items),
           AdsBannerPage(),
           //SizedBox(height: ScreenUtil().setHeight(20)),
-          DailyWeatherList(weather.dailyWeatherList.items),
+          WeeklyWeatherList(weather.currentWeather, weather.weeklyWeatherList.items),
+          FooterWidget()
         ],
       ),
     );

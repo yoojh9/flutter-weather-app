@@ -8,6 +8,7 @@ import './error_screen.dart';
 import '../widgets/splash_widget.dart';
 import '../providers/weather.dart';
 import '../providers/location_info.dart';
+import '../providers/dust.dart';
 import './weather_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,7 +23,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
   @override
   void initState() {
-    print('initState');
     WidgetsBinding.instance.addObserver(this);
 
     if(!loaded){
@@ -65,7 +65,6 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
 
     try {
       LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
-      print('locationInfo = $locationInfo');
 
       if (locationInfo == null) {
         await showLocationPermissionDialog();
@@ -73,7 +72,10 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
           loaded = false;
         });
       } else {
-        await Provider.of<Weather>(context, listen: false).getWeather(locationInfo);
+        await Provider.of<Weather>(context, listen: false).getWeather();
+        if(locationInfo.isKor){
+          await Provider.of<Dust>(context, listen: false).getDust();
+        }
         await Navigator.pushReplacementNamed(context, WeatherScreen.routeName);
       }
     } catch (error) {

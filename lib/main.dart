@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import './models/license.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import './models/license.dart';
 import './screens/error_screen.dart';
 import './screens/version_screen.dart';
 import './screens/weather_screen.dart';
 import './screens/splash_screen.dart';
 import './providers/weather.dart';
 import './providers/location_info.dart';
+import './providers/dust.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 
 void main() async{
@@ -25,8 +26,10 @@ void main() async{
       ChangeNotifierProvider(create: (_) => LocationInfo(),),
       ChangeNotifierProxyProvider<LocationInfo, Weather>(
         create: (_) => Weather(),
-        update: (_, locationInfo, currentWeather) => currentWeather..setWeatherLocation(locationInfo) )
-      //ChangeNotifierProvider(create: (_) => CurrentWeather()),
+        update: (_, locationInfo, currentWeather) => currentWeather..setLocation(locationInfo) ),
+      ChangeNotifierProxyProvider<LocationInfo, Dust>(
+        create: (_) => Dust(),
+        update: (_, locationInfo, dust) => dust..setLocation(locationInfo) ),
     ],
     child: MyApp()),
     );

@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-class DailyWeather {
+class WeeklyWeather {
   int _dt;
   int _tempMin;
   int _tempMax;
@@ -27,14 +27,14 @@ class DailyWeather {
 
 }
 
-class DailyWeatherList {
-  List<DailyWeather> _dailyWeatherList = [];
+class WeeklyWeatherList {
+  List<WeeklyWeather> _weeklyWeatherList = [];
 
-  List<DailyWeather> get items {
-    return [..._dailyWeatherList];
+  List<WeeklyWeather> get items {
+    return [..._weeklyWeatherList];
   }
 
-  void addDailyWeather(DailyWeather dailyWeather) {
-    _dailyWeatherList.add(dailyWeather);
+  void addDailyWeather(WeeklyWeather weeklyWeather) {
+    _weeklyWeatherList.add(weeklyWeather);
   }
 }

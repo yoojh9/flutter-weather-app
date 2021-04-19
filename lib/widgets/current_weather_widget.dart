@@ -13,7 +13,9 @@ class CurrentWeatherWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
-        height: ScreenUtil().setHeight(320),
+        margin: EdgeInsets.only(
+          bottom: ScreenUtil().setHeight(10),
+        ),
         child: Column(
           children: [
               FittedBox(
@@ -21,7 +23,6 @@ class CurrentWeatherWidget extends StatelessWidget {
                 style: Theme.of(context).textTheme.headline4, 
                 textAlign: TextAlign.center,)
               ),
-              SizedBox(height: ScreenUtil().setHeight(10),),
               currentWeather.icon == null 
                 ? Container() 
                 : Image.asset('assets/images/weather/${currentWeather.icon}.png', height: ScreenUtil().setHeight(120),),
@@ -30,8 +31,7 @@ class CurrentWeatherWidget extends StatelessWidget {
               currentWeather.tempMin != null && currentWeather.tempMax != null ?
                 Text('최고:${currentWeather.tempMax}°   최저:${currentWeather.tempMin}°', 
                 style: Theme.of(context).textTheme.bodyText2,)
-              : Container()
-
+              : Container(),
           ],
         ),
       ),

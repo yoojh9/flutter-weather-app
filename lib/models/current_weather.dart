@@ -1,4 +1,3 @@
-
 class CurrentWeather{
     int id;
     String _description;
@@ -7,8 +6,19 @@ class CurrentWeather{
     int tempMin;
     int tempMax;
 
+    int sunrise;
+    int sunset;
+
     set description(String description){
       _description = description;
+    }
+
+    get sunsetDateTime {
+      return DateTime.fromMillisecondsSinceEpoch(sunset * 1000).toLocal();
+    }
+
+    get sunriseDateTime {
+      return DateTime.fromMillisecondsSinceEpoch(sunrise * 1000).toLocal();
     }
 
     get description {

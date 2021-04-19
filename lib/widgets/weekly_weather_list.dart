@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screen_util.dart';
-import '../models/daily_weather.dart';
+import '../models/current_weather.dart';
+import '../models/weekly_weather.dart';
 
-class DailyWeatherList extends StatelessWidget {
-  List<DailyWeather> dailyWeatherList;
+class WeeklyWeatherList extends StatelessWidget {
+  final CurrentWeather currentWeather;
+  final List<WeeklyWeather> weeklyWeatherList;
 
-  DailyWeatherList(this.dailyWeatherList);
+  WeeklyWeatherList(this.currentWeather, this.weeklyWeatherList);
 
 
   @override
@@ -20,19 +22,19 @@ class DailyWeatherList extends StatelessWidget {
               children: [
                 Expanded(
                   flex:1,
-                  child: Text('${dailyWeatherList[index].day}', style: Theme.of(context).textTheme.bodyText2,)
+                  child: Text('${weeklyWeatherList[index].day}', style: Theme.of(context).textTheme.bodyText2,)
                 ),
                 Expanded(
                   flex: 2,
-                  child: Image.asset('assets/images/weather/${dailyWeatherList[index].icon}.png',  height: ScreenUtil().setHeight(30),)
+                  child: Image.asset('assets/images/weather/${weeklyWeatherList[index].icon}.png',  height: ScreenUtil().setHeight(30),)
                 ),
                 Expanded(
                   flex: 2,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Text('${dailyWeatherList[index].tempMin}°', style: Theme.of(context).textTheme.bodyText2,),
-                      Text('${dailyWeatherList[index].tempMax}°', style: Theme.of(context).textTheme.bodyText2,),
+                      Text('${index==0 ? currentWeather.tempMin : weeklyWeatherList[index].tempMin}°', style: Theme.of(context).textTheme.bodyText2,),
+                      Text('${index==0 ? currentWeather.tempMax : weeklyWeatherList[index].tempMax}°', style: Theme.of(context).textTheme.bodyText2,),
                     ],
                   )
                 )
@@ -40,7 +42,7 @@ class DailyWeatherList extends StatelessWidget {
             ),
           );
         },
-        childCount: dailyWeatherList.length
+        childCount: weeklyWeatherList.length
       ),
     );
   }

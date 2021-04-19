@@ -5,8 +5,8 @@ import '../models/hourly_weather.dart';
 import './item/hourly_weather_item.dart';
 
 class HourlyWeatherList extends StatelessWidget {
-  CurrentWeather currentWeather;
-  List<HourlyWeather> hourlyWeatherList;
+  final CurrentWeather currentWeather;
+  final List<HourlyWeather> hourlyWeatherList;
 
   HourlyWeatherList(this.currentWeather, this.hourlyWeatherList);
 

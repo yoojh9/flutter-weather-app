@@ -19,7 +19,10 @@ class HourlyWeatherItem extends StatelessWidget {
         children: [
           Text(index==0 ? '지금' : '$hour시', style: Theme.of(context).textTheme.bodyText2,),
           Image.asset('assets/images/weather/$icon.png', height: ScreenUtil().setHeight(30),),
-          Text('${temperature.toString()}°', style: Theme.of(context).textTheme.bodyText2,),
+          FittedBox(
+            child:  Text('${temperature.toString()}°', style: Theme.of(context).textTheme.bodyText2,),
+          )
+         
         ]
       )
     );
