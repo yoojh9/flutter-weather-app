@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:location/location.dart';
 import '../utils/location_xy.dart';
 import '../utils/location_helper.dart' as locationHelper;
@@ -7,7 +7,7 @@ import '../utils/location_helper.dart' as locationHelper;
 class LocationInfo with ChangeNotifier {
   double _latitude;
   double _longitude;
-  Address _address;
+  Placemark _address;
   bool _isUpdated = false;
   bool _isKor = false;
   int _x;
@@ -15,27 +15,35 @@ class LocationInfo with ChangeNotifier {
 
   get latitude => _latitude;
   get longitude => _longitude;
-  get address => _address.subLocality == null
-      ? _address.featureName
-      : _address.subLocality;
+
+  get address {
+    if(_address==null) return "";
+    else if(_address.thoroughfare == null || _address.thoroughfare.isEmpty){
+      return _address.subLocality;
+    } else {
+      return _address.thoroughfare;
+    }
+  }
+
   get isUpdated => _isUpdated;
   get isKor => _isKor;
   get x => _x;
   get y => _y;
+
 
   Future<LocationInfo> getLocation() async {
     LocationData locationData = await locationHelper.getLocation();
 
     if (locationData == null) return null;
 
-    List<Address> addressList = await locationHelper.getAddress(
-        locationData.latitude, locationData.longitude);
-    LocationXY locationXY =
-        changeGridLocation(locationData.longitude, locationData.latitude);
+    List<Placemark> addressList = await locationHelper.getAddress(locationData.latitude, locationData.longitude);
+    LocationXY locationXY = changeGridLocation(locationData.longitude, locationData.latitude);
+
+    print(addressList.first);
 
     _latitude = locationData.latitude;
     _longitude = locationData.longitude;
-    _address = addressList[0];
+    _address = addressList?.first;
     _x = locationXY.x;
     _y = locationXY.y;
 

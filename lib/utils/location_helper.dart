@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:geocoder/geocoder.dart';
+import 'dart:io';
+import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:location/location.dart';
-import 'package:weather_app/providers/location_info.dart';
 //import 'package:geolocator/geolocator.dart';
 
 /*
@@ -46,36 +46,14 @@ Future<Position> getPosition() async {
 
 */
 
-Future<List<Address>> getAddress(double latitude, double longitude) async {
-  return await Geocoder.local
-      .findAddressesFromCoordinates(new Coordinates(latitude, longitude));
+Future<List<geocoding.Placemark>> getAddress(double latitude, double longitude) async {
+  try {
+    return await geocoding.placemarkFromCoordinates(latitude, longitude, localeIdentifier: Platform.localeName);
+  } catch(error) {
+    print(error);
+  }
 }
 
-// Future<bool> requestLocationPermission() async {
-//   Location location = new Location();
-
-//   bool _serviceEnabled;
-//   PermissionStatus _permissionGranted;
-
-//   _serviceEnabled = await location.serviceEnabled();
-//   if (!_serviceEnabled) {
-//     _serviceEnabled = await location.requestService();
-//     if (!_serviceEnabled) {
-//       return false;
-//     }
-//   }
-
-//   _permissionGranted = await location.hasPermission();
-//   if (_permissionGranted == PermissionStatus.denied) {
-//     _permissionGranted = await location.requestPermission();
-//     if (_permissionGranted != PermissionStatus.granted) {
-//       return false;
-//     }
-//   }
-//   return true;
-// }
-
-Future<bool> checkLocationPermission() async {}
 
 Future<LocationData> getLocation() async {
   Location location = new Location();
