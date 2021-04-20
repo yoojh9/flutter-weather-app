@@ -49,7 +49,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
     await Provider.of<Weather>(context, listen: false).getWeather();
     if(locationInfo.isKor){
       await Provider.of<Dust>(context, listen: false).getDust();
-    }
+    } 
   }
 
   void _toggle() {
@@ -113,7 +113,7 @@ class _WeatherScreenState extends State<WeatherScreen> {
           ),
 
           CurrentWeatherWidget(weather.currentWeather),
-          CurrentDustWidget(dust),
+          CurrentDustWidget(location.isKor, dust),
           HourlyWeatherList(weather.currentWeather, weather.hourlyWeatherList.items),
           AdsBannerPage(),
           //SizedBox(height: ScreenUtil().setHeight(20)),

@@ -4,9 +4,10 @@ import '../providers/dust.dart';
 import '../theme/color.dart';
 
 class CurrentDustWidget extends StatelessWidget {
+  final bool isKor;
   final Dust dust;
 
-  CurrentDustWidget(this.dust);
+  CurrentDustWidget(this.isKor, this.dust);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class CurrentDustWidget extends StatelessWidget {
         margin: EdgeInsets.only(
           bottom: ScreenUtil().setHeight(25),
         ),
-        child: (dust==null || dust.pm10Grade==null)
+        child: (!isKor || dust==null || dust.pm10Grade==null)
           ? Container()
           : Row(
             mainAxisAlignment: MainAxisAlignment.center,

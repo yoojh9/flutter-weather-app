@@ -17,11 +17,15 @@ class LocationInfo with ChangeNotifier {
   get longitude => _longitude;
 
   get address {
-    if(_address==null) return "";
-    else if(_address.thoroughfare == null || _address.thoroughfare.isEmpty){
-      return _address.subLocality;
-    } else {
+    if(_address==null) return "현재위치";
+    else if(_address.thoroughfare != null && _address.thoroughfare.isNotEmpty){
       return _address.thoroughfare;
+    } else if(_address.subLocality != null && _address.subLocality.isNotEmpty){
+      return _address.subLocality;
+    } else if(_address.locality != null && _address.locality.isNotEmpty){
+      return _address.locality;
+    } else {
+      return _address.name;
     }
   }
 
@@ -39,7 +43,7 @@ class LocationInfo with ChangeNotifier {
     List<Placemark> addressList = await locationHelper.getAddress(locationData.latitude, locationData.longitude);
     LocationXY locationXY = changeGridLocation(locationData.longitude, locationData.latitude);
 
-    print(addressList.first);
+    print(addressList?.first);
 
     _latitude = locationData.latitude;
     _longitude = locationData.longitude;
@@ -49,8 +53,9 @@ class LocationInfo with ChangeNotifier {
 
     _isUpdated = true;
 
-    if ((locationXY.x >= 53 && locationXY.x <= 99) &&
-        (locationXY.y >= 69 && locationXY.x <= 99)) {
+    if(_address == null || _address.isoCountryCode == null || _address.isoCountryCode != "KR"){
+      _isKor = false;
+    } else {
       _isKor = true;
     }
 

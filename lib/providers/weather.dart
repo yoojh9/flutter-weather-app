@@ -127,13 +127,13 @@ class Weather with ChangeNotifier{
     
     final current = body['current'];
     final daily = body['daily'];
-    
+
     currentWeather.id = current['weather'][0]['id'];
     //currentWeather.description = current['weather'][0]['description'];
     currentWeather.icon = current['weather'][0]['icon'];
 
-    currentWeather.sunrise = current['current']["sunrise"];
-    currentWeather.sunset = current['current']['sunset'];
+    currentWeather.sunrise = current["sunrise"];
+    currentWeather.sunset = current['sunset'];
 
     currentWeather.temp =  current['temp'].toInt();
     currentWeather.tempMin = daily[0]['temp']['min'].toInt();
