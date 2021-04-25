@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,20 +17,16 @@ import '../widgets/ads_banner_page.dart';
 import '../widgets/current_dust_widget.dart';
 import '../widgets/footer_widget.dart';
 
-
-
 class WeatherScreen extends StatefulWidget {
-  
   static final routeName = '/weather';
 
   @override
   _WeatherScreenState createState() => _WeatherScreenState();
 }
 
-
 class _WeatherScreenState extends State<WeatherScreen> {
-  
-  final GlobalKey<InnerDrawerState> _innerDrawerKey = GlobalKey<InnerDrawerState>();
+  final GlobalKey<InnerDrawerState> _innerDrawerKey =
+      GlobalKey<InnerDrawerState>();
 
   @override
   void didChangeDependencies() async {
@@ -41,21 +36,19 @@ class _WeatherScreenState extends State<WeatherScreen> {
   @override
   void initState() {
     super.initState();
-
   }
 
-  void _refresh() async{
-    LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
+  void _refresh() async {
+    LocationInfo locationInfo =
+        await Provider.of<LocationInfo>(context, listen: false).getLocation();
     await Provider.of<Weather>(context, listen: false).getWeather();
-    if(locationInfo.isKor){
+    if (locationInfo.isKor) {
       await Provider.of<Dust>(context, listen: false).getDust();
-    } 
+    }
   }
 
   void _toggle() {
-    _innerDrawerKey.currentState.toggle(
-      direction: InnerDrawerDirection.start
-    );
+    _innerDrawerKey.currentState.toggle(direction: InnerDrawerDirection.start);
   }
 
   @override
@@ -64,61 +57,72 @@ class _WeatherScreenState extends State<WeatherScreen> {
     final location = Provider.of<LocationInfo>(context, listen: true);
 
     return InnerDrawer(
-      key: _innerDrawerKey,
-      onTapClose: true,
-      swipe: true,
-      //scale: IDOffset.horizontal(0.9),
-      //borderRadius: 30,
-      leftAnimationType: InnerDrawerAnimation.linear,
-      backgroundDecoration: BoxDecoration(color: Colors.white),
-      offset: IDOffset.only(bottom: 0.0, right: 0.0, left: 0.6),
-      leftChild: DrawerMenu(),
-    
-      scaffold: Platform.isIOS 
-        ? CupertinoPageScaffold(
-          child: 
-            weather.currentWeather.id == null ? SplashWidget() : _weatherBody(context, location, weather)
-        )
-        : Scaffold(
-          body: weather.currentWeather.id == null ? SplashWidget() : _weatherBody(context, location, weather),
-        )
-    );
+        key: _innerDrawerKey,
+        onTapClose: true,
+        swipe: true,
+        //scale: IDOffset.horizontal(0.9),
+        //borderRadius: 30,
+        leftAnimationType: InnerDrawerAnimation.linear,
+        backgroundDecoration: BoxDecoration(color: Colors.white),
+        offset: IDOffset.only(bottom: 0.0, right: 0.0, left: 0.6),
+        leftChild: DrawerMenu(),
+        scaffold: Platform.isIOS
+            ? CupertinoPageScaffold(
+                child: weather.currentWeather.id == null
+                    ? SplashWidget()
+                    : _weatherBody(context, location, weather))
+            : Scaffold(
+                body: weather.currentWeather.id == null
+                    ? SplashWidget()
+                    : _weatherBody(context, location, weather),
+              ));
   }
 
-  Widget _weatherBody(BuildContext ctx, final location, final weather){
-    final dust = Provider.of<Dust>(context, listen:true);
+  Widget _weatherBody(BuildContext ctx, final location, final weather) {
+    final dust = Provider.of<Dust>(context, listen: true);
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: ScreenUtil().setWidth(12)
-      ),
+      padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(12)),
       color: CustomColor.getWeatherColor(weather.currentWeather.icon),
       child: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor: CustomColor.getWeatherColor(weather.currentWeather.icon) ,
+            backgroundColor:
+                CustomColor.getWeatherColor(weather.currentWeather.icon),
             pinned: true,
             //floating: true,
             elevation: 0,
-            leading: IconButton(icon: Icon(Icons.menu), onPressed: _toggle,),
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: _toggle,
+            ),
             actions: [
-              IconButton(icon: Icon(Icons.refresh), onPressed: _refresh,)
+              IconButton(
+                icon: Icon(Icons.refresh),
+                onPressed: _refresh,
+              )
             ],
             //expandedHeight: ScreenUtil().setHeight(100),
             flexibleSpace: Container(
               margin: EdgeInsets.only(bottom: ScreenUtil().setHeight(10)),
               alignment: Alignment.bottomCenter,
-              child: Text('${location.isUpdated ? location.address : ''}', style: Theme.of(ctx).textTheme.headline4, textAlign: TextAlign.center,),
+              child: Text(
+                '${location.isUpdated ? location.address : ''}',
+                style: Theme.of(ctx).textTheme.headline4,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
 
           CurrentWeatherWidget(weather.currentWeather),
           CurrentDustWidget(location.isKor, dust),
-          HourlyWeatherList(weather.currentWeather, weather.hourlyWeatherList.items),
+          HourlyWeatherList(
+              weather.currentWeather, weather.hourlyWeatherList.items),
           AdsBannerPage(),
           //SizedBox(height: ScreenUtil().setHeight(20)),
-          WeeklyWeatherList(weather.currentWeather, weather.weeklyWeatherList.items),
-          FooterWidget()
+          WeeklyWeatherList(
+              weather.currentWeather, weather.weeklyWeatherList.items),
+          FooterWidget(location.isKor)
         ],
       ),
     );
