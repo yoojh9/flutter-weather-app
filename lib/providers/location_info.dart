@@ -17,12 +17,16 @@ class LocationInfo with ChangeNotifier {
   get longitude => _longitude;
 
   get address {
-    if(_address==null) return "현재위치";
-    else if(_address.thoroughfare != null && _address.thoroughfare.isNotEmpty){
+    print('_address : $_address');
+    if (_address == null)
+      return "현재위치";
+    else if (_address.thoroughfare != null &&
+        _address.thoroughfare.isNotEmpty) {
       return _address.thoroughfare;
-    } else if(_address.subLocality != null && _address.subLocality.isNotEmpty){
+    } else if (_address.subLocality != null &&
+        _address.subLocality.isNotEmpty) {
       return _address.subLocality;
-    } else if(_address.locality != null && _address.locality.isNotEmpty){
+    } else if (_address.locality != null && _address.locality.isNotEmpty) {
       return _address.locality;
     } else {
       return _address.name;
@@ -34,14 +38,19 @@ class LocationInfo with ChangeNotifier {
   get x => _x;
   get y => _y;
 
+  set isKor(bool isKor) {
+    _isKor = isKor;
+  }
 
   Future<LocationInfo> getLocation() async {
     LocationData locationData = await locationHelper.getLocation();
 
     if (locationData == null) return null;
 
-    List<Placemark> addressList = await locationHelper.getAddress(locationData.latitude, locationData.longitude);
-    LocationXY locationXY = changeGridLocation(locationData.longitude, locationData.latitude);
+    List<Placemark> addressList = await locationHelper.getAddress(
+        locationData.latitude, locationData.longitude);
+    LocationXY locationXY =
+        changeGridLocation(locationData.longitude, locationData.latitude);
 
     print(addressList?.first);
 
@@ -53,7 +62,9 @@ class LocationInfo with ChangeNotifier {
 
     _isUpdated = true;
 
-    if(_address == null || _address.isoCountryCode == null || _address.isoCountryCode != "KR"){
+    if (_address == null ||
+        _address.isoCountryCode == null ||
+        _address.isoCountryCode != "KR") {
       _isKor = false;
     } else {
       _isKor = true;

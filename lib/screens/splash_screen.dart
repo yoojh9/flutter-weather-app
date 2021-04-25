@@ -18,14 +18,15 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver {
+class _SplashScreenState extends State<SplashScreen>
+    with WidgetsBindingObserver {
   bool loaded = false;
 
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
 
-    if(!loaded){
+    if (!loaded) {
       initLocation();
     }
 
@@ -45,7 +46,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     }
     if (state == AppLifecycleState.resumed) {
       Timer(Duration(seconds: 1), () {
-        if(!loaded){
+        if (!loaded) {
           initLocation();
         }
       });
@@ -64,7 +65,8 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
     });
 
     try {
-      LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
+      LocationInfo locationInfo =
+          await Provider.of<LocationInfo>(context, listen: false).getLocation();
 
       if (locationInfo == null) {
         await showLocationPermissionDialog();
@@ -73,7 +75,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
         });
       } else {
         await Provider.of<Weather>(context, listen: false).getWeather();
-        if(locationInfo.isKor){
+        if (locationInfo.isKor) {
           await Provider.of<Dust>(context, listen: false).getDust();
         }
         await Navigator.pushReplacementNamed(context, WeatherScreen.routeName);
@@ -104,14 +106,14 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
                         await openAppSettings();
                       })
                 ],
-              )
-        );
+              ));
     } else {
       return showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
                 title: Text('위치 정보 권한 설정'),
-                content: Text('투데이날씨 앱을 사용하기 위해서는 위치 권한 허용이 필요합니다. 앱 설정 > 권한에서 위치를 추가해주세요.'),
+                content: Text(
+                    '투데이날씨 앱을 사용하기 위해서는 위치 권한 허용이 필요합니다. 앱 설정 > 권한에서 위치를 추가해주세요.'),
                 actions: [
                   TextButton(
                     onPressed: () async {
@@ -121,8 +123,7 @@ class _SplashScreenState extends State<SplashScreen> with WidgetsBindingObserver
                     child: Text('확인'),
                   )
                 ],
-          )
-      );
+              ));
     }
   }
 }
