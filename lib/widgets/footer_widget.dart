@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/screen_util.dart';
+import '../providers/dust.dart';
 
 class FooterWidget extends StatelessWidget {
-  bool isKor;
+  final bool isKor;
+  final Dust dust;
 
-  FooterWidget(this.isKor);
+  FooterWidget(this.isKor, this.dust);
 
   @override
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
-        child: isKor
+        child: (isKor && dust!=null && dust.pm10Grade!=null)
             ? Container(
                 //height: ScreenUtil().setHeight(30),
                 margin: EdgeInsets.symmetric(

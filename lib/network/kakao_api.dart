@@ -31,3 +31,34 @@ Future<dynamic> getTmXY(double latitude, double longitude) async {
       throw error;
     }
 }
+
+
+/*
+ * 위도 경도 -> 주소 변환
+ */
+Future<dynamic> getAddress(double latitude, double longitude) async {
+    final headers = {
+      'Authorization': env['KAKAO_AUTHKEY']
+    };
+
+    final urlStr = 'https://dapi.kakao.com/v2/local/geo/coord2address.json?x=$longitude&y=$latitude';
+    final url = Uri.parse(urlStr);
+
+    try {
+      final response = await http.get(url, headers: headers);
+      if(response.statusCode != 200 ) {
+        throw 'KAKAO API STATUS CODE NOT 200';
+      }
+      final body = json.decode(response.body);
+
+      if(body != null){
+        return body['documents'][0];
+      } else {
+        throw '카카오 좌표계 API coord to address 오류';
+      }
+
+    } catch(error){
+      print(error);
+      throw error;
+    }
+}

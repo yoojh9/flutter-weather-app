@@ -65,9 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
     });
 
     try {
-      LocationInfo locationInfo =
-          await Provider.of<LocationInfo>(context, listen: false).getLocation();
-
+      LocationInfo locationInfo = await Provider.of<LocationInfo>(context, listen: false).getLocation();
       if (locationInfo == null) {
         await showLocationPermissionDialog();
         setState(() {

@@ -116,13 +116,11 @@ class _WeatherScreenState extends State<WeatherScreen> {
 
           CurrentWeatherWidget(weather.currentWeather),
           CurrentDustWidget(location.isKor, dust),
-          HourlyWeatherList(
-              weather.currentWeather, weather.hourlyWeatherList.items),
+          HourlyWeatherList(weather.currentWeather, weather.hourlyWeatherList.items),
           AdsBannerPage(),
           //SizedBox(height: ScreenUtil().setHeight(20)),
-          WeeklyWeatherList(
-              weather.currentWeather, weather.weeklyWeatherList.items),
-          FooterWidget(location.isKor)
+          WeeklyWeatherList(weather.currentWeather, weather.weeklyWeatherList.items),
+          FooterWidget(location.isKor, dust),
         ],
       ),
     );
