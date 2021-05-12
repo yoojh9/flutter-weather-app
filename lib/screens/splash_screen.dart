@@ -80,6 +80,7 @@ class _SplashScreenState extends State<SplashScreen>
       }
     } catch (error) {
       print(error);
+      print('error : $error');
       Navigator.pushReplacementNamed(context, ErrorScreen.routeName);
     }
   }

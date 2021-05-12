@@ -13,7 +13,7 @@ Future<dynamic> getStationName(double tmX, double tmY) async {
 
   try {
     final response = await http.get(url);
-
+    print('response : ${response.body}');
     if (response.body == null || response.body.isEmpty) {
       return null;
     }
@@ -22,6 +22,7 @@ Future<dynamic> getStationName(double tmX, double tmY) async {
       throw 'AIRKOREA API STATUS CODE NOT 200';
     }
     final body = json.decode(response.body);
+    print('body = $body');
     if (body != null || body != "") {
       return body['response']['body']['items'][0];
     } else {

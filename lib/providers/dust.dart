@@ -54,22 +54,24 @@ class Dust with ChangeNotifier {
   }
 
   Future<void> getDust() async {
-    if (!_locationInfo.isKor) return; // 위치정보가 한국이 아닐 경우
+    try {
+      if (!_locationInfo.isKor) return; // 위치정보가 한국이 아닐 경우
+      final tmXY = await KakaoAPI.getTmXY(
+          _locationInfo.latitude, _locationInfo.longitude); // TM 좌표로 변환
+      if (tmXY == null) return;
+      final station = await AirKoreaAPI.getStationName(tmXY['x'], tmXY['y']);
+      if (station == null) return;
+      final stationName = station['stationName'];
+      final dust = await AirKoreaAPI.getDustData(stationName);
+      if (dust == null) return;
+      pm10Grade = dust['pm10Grade1h'];
+      pm25Grade = dust['pm25Grade1h'];
+    } catch(error){
+      _locationInfo.isKor = false;
+      print('getDust error : $error');
+    } finally {
+      notifyListeners();
+    }
 
-    final tmXY = await KakaoAPI.getTmXY(
-        _locationInfo.latitude, _locationInfo.longitude); // TM 좌표로 변환
-    if (tmXY == null) return;
-
-    final station = await AirKoreaAPI.getStationName(tmXY['x'], tmXY['y']);
-    if (station == null) return;
-    final stationName = station['stationName'];
-
-    final dust = await AirKoreaAPI.getDustData(stationName);
-    if (dust == null) return;
-
-    pm10Grade = dust['pm10Grade1h'];
-    pm25Grade = dust['pm25Grade1h'];
-
-    notifyListeners();
   }
 }
